@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>%%TITLE%%</title>
+<meta name="description" content="%%DESC%%">
+<meta name="robots" content="%%ROBOTS%%">
+<link rel="canonical" href="%%URL%%">
+<meta name="theme-color" content="#0d7c78" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0c121c" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="application-name" content="Beacon">
+<meta name="author" content="Beacon">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Beacon">
+<meta property="og:title" content="%%TITLE%%">
+<meta property="og:description" content="%%DESC%%">
+<meta property="og:url" content="%%URL%%">
+<meta property="og:image" content="%%ORIGIN%%/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Beacon: SEO and GEO audit with scores and a prioritised fix list">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="%%TITLE%%">
+<meta name="twitter:description" content="%%DESC%%">
+<meta name="twitter:image" content="%%ORIGIN%%/og-image.png">
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Beacon","url":"%%ORIGIN%%/","applicationCategory":"BusinessApplication","operatingSystem":"Any","description":"Free SEO and GEO audit tool. Scan any page for search engine and AI answer engine readiness, get a score, a prioritised fix list and a shareable or downloadable report.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["SEO audit","GEO (generative engine optimization) audit","AI crawler access check","llms.txt detection","Shareable report links","Word (.docx) export"]}
+</script>
+<style>
+:root{
+  --bg:#edf0f5; --card:#fff; --ink:#0f1b2d; --mute:#5d6b82; --line:#dde2ec; --soft:#f4f6fa;
+  --seo:#0d7c78; --geo:#6a3fd1; --good:#12985a; --warn:#c77d00; --bad:#d23a2e; --focus:#2f5bff;
+  --r:14px;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#0c121c; --card:#141c2a; --ink:#e8edf6; --mute:#94a1b8; --line:#243044; --soft:#192235;
+    --seo:#3cc3bc; --geo:#a58bff; --good:#3dc985; --warn:#f0a93a; --bad:#ff6b5e; --focus:#7f9bff}
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Avenir Next","Segoe UI",system-ui,-apple-system,sans-serif}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.wrap{max-width:980px;margin:0 auto;padding:20px 16px 64px}
+header.top{display:flex;align-items:center;justify-content:space-between;padding:8px 0 28px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:-.02em;text-decoration:none;color:inherit}
+.brand svg{width:28px;height:28px}
+
+/* Scan form */
+.hero h1{font-size:clamp(30px,6vw,48px);line-height:1.05;letter-spacing:-.035em;margin:0 0 12px;font-weight:800;max-width:15ch}
+.hero p{color:var(--mute);margin:0 0 24px;max-width:52ch}
+.scanform{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:grid;gap:12px}
+.urlrow{display:flex;gap:10px;flex-wrap:wrap}
+.urlrow input[type=text]{flex:1 1 240px;min-width:0;padding:14px 16px;border-radius:10px;border:1.5px solid var(--line);background:var(--soft);font-size:17px}
+.btn{border:0;border-radius:10px;padding:14px 22px;font-weight:700;background:var(--ink);color:var(--bg);cursor:pointer}
+.btn:disabled{opacity:.55;cursor:progress}
+.btn.ghost{background:var(--soft);color:var(--ink);border:1px solid var(--line);padding:10px 14px;font-weight:600;font-size:14px}
+.modes{display:flex;gap:10px;flex-wrap:wrap}
+.mode{position:relative;flex:1 1 200px;cursor:pointer}
+.mode input{position:absolute;opacity:0;inset:0}
+.mode span{display:block;border:1.5px solid var(--line);border-radius:10px;padding:10px 14px;background:var(--soft)}
+.mode b{display:block;font-size:15px}
+.mode small{color:var(--mute);font-size:13px}
+.mode input:checked+span{background:color-mix(in srgb,var(--c) 12%,var(--card));border-color:var(--c)}
+.mode input:focus-visible+span{outline:3px solid var(--focus);outline-offset:2px}
+.mode.seo{--c:var(--seo)} .mode.geo{--c:var(--geo)}
+.err{color:var(--bad);font-weight:600;margin:0}
+.recent{margin-top:28px}
+.recent h2{font-size:15px;color:var(--mute);margin:0 0 10px;font-weight:600}
+.recent a{display:flex;justify-content:space-between;gap:12px;padding:12px 14px;background:var(--card);border:1px solid var(--line);border-radius:10px;margin-bottom:8px;text-decoration:none;color:inherit}
+.recent a:hover{border-color:var(--mute)}
+
+/* Loading */
+.loading{text-align:center;padding:70px 0}
+.pulse{width:74px;height:74px;margin:0 auto 18px;border-radius:50%;border:4px solid var(--line);border-top-color:var(--seo);border-right-color:var(--geo);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.pulse{animation-duration:3s}}
+
+/* Report header */
+.rhead{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:flex-start;margin-bottom:18px}
+.rhead h1{margin:0;font-size:clamp(22px,4.5vw,32px);letter-spacing:-.03em;word-break:break-word}
+.rhead .sub{color:var(--mute);font-size:14px;word-break:break-all}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* Scores */
+.scores{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:12px;margin-bottom:16px}
+@media(max-width:720px){.scores{grid-template-columns:1fr 1fr}.scores .big{grid-column:1/-1}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.score{display:flex;align-items:center;gap:16px}
+.ring{position:relative;flex:none}
+.ring svg{display:block;transform:rotate(-90deg)}
+.ring .n{position:absolute;inset:0;display:grid;place-items:center;font-weight:800;letter-spacing:-.04em}
+.score h3{margin:0;font-size:15px}
+.score p{margin:2px 0 0;color:var(--mute);font-size:13px}
+.grade{display:inline-block;margin-top:6px;padding:2px 10px;border-radius:99px;font-weight:800;font-size:13px;color:#fff}
+.big .ring .n{font-size:44px}
+.small .ring .n{font-size:26px}
+.scores .small{flex-direction:column;align-items:flex-start}
+
+/* Snapshot */
+.snap{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:16px}
+.snap div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.snap b{display:block;font-size:20px;letter-spacing:-.02em}
+.snap span{color:var(--mute);font-size:13px}
+
+/* Priorities */
+h2.sec{font-size:20px;letter-spacing:-.02em;margin:28px 0 12px}
+.prio{display:grid;gap:8px}
+.prio .item{display:flex;gap:12px;padding:14px;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--c);border-radius:12px;align-items:flex-start}
+.prio .item.fail{--c:var(--bad)} .prio .item.warn{--c:var(--warn)}
+.prio b{display:block}
+.prio p{margin:2px 0 0;color:var(--mute);font-size:14.5px}
+.pill{flex:none;font-size:12px;font-weight:700;padding:2px 8px;border-radius:6px;color:#fff}
+.pill.seo{background:var(--seo)} .pill.geo{background:var(--geo)}
+@media(prefers-color-scheme:dark){.pill{color:#0c121c}}
+
+/* Tabs */
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-bottom:16px;flex-wrap:wrap}
+.tab{background:none;border:0;padding:10px 16px;font-weight:700;color:var(--mute);border-bottom:3px solid transparent;cursor:pointer;margin-bottom:-1px}
+.tab[aria-selected=true]{color:var(--ink);border-bottom-color:var(--c)}
+.cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-bottom:16px}
+.cat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.cat .row{display:flex;justify-content:space-between;font-size:14px;font-weight:600;margin-bottom:8px}
+.bar{height:8px;background:var(--soft);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px}
+.filters{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:99px;padding:6px 14px;font-size:14px;cursor:pointer;font-weight:600}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.cathead{font-size:14px;color:var(--mute);font-weight:700;margin:18px 0 8px}
+
+/* Checks */
+details.check{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:8px}
+details.check summary{list-style:none;cursor:pointer;display:flex;gap:12px;align-items:center;padding:12px 14px}
+details.check summary::-webkit-details-marker{display:none}
+.dot{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:13px;font-weight:800}
+.dot.pass{background:var(--good)} .dot.warn{background:var(--warn)} .dot.fail{background:var(--bad)}
+@media(prefers-color-scheme:dark){.dot{color:#0c121c}}
+.check .t{font-weight:700;flex:1}
+.check .chev{color:var(--mute);transition:transform .15s}
+details[open] .chev{transform:rotate(90deg)}
+.check .body{padding:0 14px 14px 48px;font-size:15px}
+.check .body p{margin:0 0 8px;word-break:break-word}
+.fixbox{background:var(--soft);border-radius:10px;padding:10px 12px}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:99px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.on{opacity:1}
+.hide{display:none!important}
+
+@media print{
+  body{background:#fff;color:#000} .top,.actions,.filters,.tabs,.toast,.scanform{display:none!important}
+  details.check{break-inside:avoid} details.check .body{display:block}
+  .card,.snap div,.cat,details.check{border-color:#ccc}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/" id="home">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="none" stroke="var(--seo)" stroke-width="3" stroke-dasharray="44 44"/><circle cx="16" cy="16" r="14" fill="none" stroke="var(--geo)" stroke-width="3" stroke-dasharray="44 44" stroke-dashoffset="-44"/><circle cx="16" cy="16" r="4" fill="var(--ink)"/></svg>
+      Beacon
+    </a>
+
+    <p>Version October 14th, 2026</p>
+  </header>
+
+  <main id="app"></main>
+  <p>Made by audixdev (quin)</p>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const $ = (s, r = document) => r.querySelector(s);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const col = (n) => (n >= 80 ? 'var(--good)' : n >= 50 ? 'var(--warn)' : 'var(--bad)');
+const app = $('#app');
+const SYMBOL = { pass: '✓', warn: '!', fail: '✕' };
+const MODE_NAME = { seo: 'SEO', geo: 'GEO' };
+let state = { report: null, tab: null, filter: 'issues' };
+
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('on');
+  setTimeout(() => t.classList.remove('on'), 1800);
+}
+
+/* ---------- Home ---------- */
+function recents() { try { return JSON.parse(localStorage.getItem('beacon_recent') || '[]'); } catch { return []; } }
+function addRecent(r) {
+  const list = [{ id: r.id, host: r.host, overall: r.overall, at: r.scannedAt }, ...recents().filter((x) => x.id !== r.id)].slice(0, 6);
+  try { localStorage.setItem('beacon_recent', JSON.stringify(list)); } catch {}
+}
+
+function renderHome() {
+  document.title = 'Beacon – SEO & GEO audit';
+  const rec = recents();
+  app.innerHTML = `
+  <section class="hero">
+    <h1>See how search and AI see your site</h1>
+    <p>Paste a link. Beacon scans the page for classic SEO and for GEO, how likely AI answer engines are to read, trust and cite it, then gives you a score and a fix list.</p>
+    <form class="scanform" id="form">
+      <div class="urlrow">
+        <input type="text" id="url" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="example.com/page" aria-label="Website URL" required>
+        <button class="btn" id="go">Scan site</button>
+      </div>
+      <div class="modes" role="group" aria-label="What to scan">
+        <label class="mode seo"><input type="checkbox" value="seo" checked><span><b>SEO</b><small>Rankings in Google & Bing</small></span></label>
+        <label class="mode geo"><input type="checkbox" value="geo" checked><span><b>GEO</b><small>Visibility in ChatGPT, Claude, Perplexity</small></span></label>
+      </div>
+      <p class="err hide" id="err" role="alert"></p>
+    </form>
+  </section>
+  ${rec.length ? `<section class="recent"><h2>Recent scans</h2>${rec.map((r) => `<a href="/r/${r.id}" data-nav><span>${esc(r.host)}</span><b style="color:${col(r.overall)}">${r.overall}</b></a>`).join('')}</section>` : ''}`;
+  $('#form').addEventListener('submit', onScan);
+}
+
+async function onScan(e) {
+  e.preventDefault();
+  const url = $('#url').value.trim();
+  const modes = [...document.querySelectorAll('.mode input:checked')].map((i) => i.value);
+  const err = $('#err');
+  err.classList.add('hide');
+  if (!modes.length) { err.textContent = 'Choose SEO, GEO, or both.'; err.classList.remove('hide'); return; }
+  $('#go').disabled = true;
+  const prev = app.innerHTML;
+  app.innerHTML = `<div class="loading"><div class="pulse"></div><h2 id="step">Fetching the page…</h2><p style="color:var(--mute)">Checking ${esc(url)}</p></div>`;
+  const steps = ['Fetching the page…', 'Reading robots.txt and sitemap…', 'Looking for AI crawler rules…', 'Scoring the results…'];
+  let i = 0; const iv = setInterval(() => { const s = $('#step'); if (s) s.textContent = steps[Math.min(++i, steps.length - 1)]; }, 1800);
+  try {
+    const res = await fetch('/api/scan', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ url, modes }) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Scan failed.');
+    addRecent(data);
+    history.pushState({}, '', `/r/${data.id}`);
+    showReport(data);
+  } catch (ex) {
+    app.innerHTML = prev;
+    $('#form').addEventListener('submit', onScan);
+    $('#url').value = url;
+    const er = $('#err'); er.textContent = ex.message; er.classList.remove('hide');
+  } finally { clearInterval(iv); }
+}
+
+/* ---------- Report ---------- */
+function ring(score, size, stroke) {
+  const r = (size - stroke) / 2, c = 2 * Math.PI * r;
+  return `<div class="ring" style="width:${size}px;height:${size}px">
+    <svg width="${size}" height="${size}"><circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="var(--soft)" stroke-width="${stroke}"/>
+    <circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="${col(score)}" stroke-width="${stroke}" stroke-linecap="round" stroke-dasharray="${(c * score) / 100} ${c}"/></svg>
+    <div class="n" style="color:${col(score)}">${score}</div></div>`;
+}
+
+function showReport(r) {
+  state = { report: r, tab: r.seo ? 'seo' : 'geo', filter: 'issues' };
+  renderReport();
+  window.scrollTo(0, 0);
+}
+
+function renderReport() {
+  const r = state.report, s = r.snapshot;
+  document.title = `${r.host} – SEO & GEO report`;
+  const date = new Date(r.scannedAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+  const mini = (key, label) => r[key] ? `<div class="card score small">${ring(r[key].score, 84, 9)}<div><h3>${label}</h3><p>${r[key].counts.fail} to fix · ${r[key].counts.warn} to improve</p><span class="grade" style="background:${col(r[key].score)}">Grade ${r[key].grade}</span></div></div>` : '';
+  app.innerHTML = `
+  <div class="rhead">
+    <div><h1>${esc(r.host)}</h1><div class="sub">${esc(r.finalUrl)} · ${esc(date)}</div></div>
+    <div class="actions">
+      <button class="btn ghost" id="copy">Copy share link</button>
+      <a class="btn ghost" href="/api/reports/${r.id}/docx" style="text-decoration:none">Download .docx</a>
+      <button class="btn ghost" onclick="print()">Print</button>
+      <a class="btn ghost" href="/" data-nav style="text-decoration:none">New scan</a>
+    </div>
+  </div>
+  <div class="scores">
+    <div class="card score big">${ring(r.overall, 132, 12)}<div><h3>Overall score</h3><p>${r.modes.map((m) => MODE_NAME[m]).join(' + ')}</p><span class="grade" style="background:${col(r.overall)}">Grade ${r.grade}</span></div></div>
+    ${mini('seo', 'SEO')}${mini('geo', 'GEO')}
+  </div>
+  <div class="snap">
+    <div><b>${s.words}</b><span>words</span></div>
+    <div><b>${s.loadMs} ms</b><span>response time</span></div>
+    <div><b>${s.sizeKb} KB</b><span>HTML size</span></div>
+    <div><b>${s.internalLinks} / ${s.externalLinks}</b><span>internal / external links</span></div>
+    <div><b>${s.schemaTypes.length}</b><span>schema types</span></div>
+  </div>
+  ${r.priorities.length ? `<h2 class="sec">Fix these first</h2><div class="prio">${r.priorities.map((c) => `
+    <div class="item ${c.status}"><span class="pill ${c.mode}">${MODE_NAME[c.mode]}</span><div><b>${esc(c.title)}</b><p>${esc(c.fix || c.detail)}</p></div></div>`).join('')}</div>` : '<h2 class="sec">Nothing urgent. Nice work.</h2>'}
+  <h2 class="sec">Full results</h2>
+  ${r.seo && r.geo ? `<div class="tabs" role="tablist">
+    <button class="tab" role="tab" data-tab="seo" style="--c:var(--seo)">SEO · ${r.seo.score}</button>
+    <button class="tab" role="tab" data-tab="geo" style="--c:var(--geo)">GEO · ${r.geo.score}</button></div>` : ''}
+  <div id="detail"></div>`;
+  $('#copy').onclick = copyLink;
+  document.querySelectorAll('.tab').forEach((b) => b.onclick = () => { state.tab = b.dataset.tab; renderDetail(); });
+  renderDetail();
+}
+
+function renderDetail() {
+  const sec = state.report[state.tab];
+  document.querySelectorAll('.tab').forEach((b) => b.setAttribute('aria-selected', b.dataset.tab === state.tab));
+  const f = state.filter;
+  const show = (c) => f === 'all' || (f === 'issues' ? c.status !== 'pass' : c.status === 'pass');
+  const mc = state.tab === 'seo' ? 'var(--seo)' : 'var(--geo)';
+  const cats = sec.categories.map((c) => `<div class="cat"><div class="row"><span>${esc(c.name)}</span><span style="color:${col(c.score)}">${c.score}</span></div><div class="bar"><i style="width:${c.score}%;background:${col(c.score)}"></i></div></div>`).join('');
+  const groups = sec.categories.map((cat) => {
+    const items = sec.checks.filter((c) => c.category === cat.name && show(c));
+    if (!items.length) return '';
+    return `<div class="cathead">${esc(cat.name)}</div>` + items.map((c) => `
+      <details class="check" ${c.status === 'fail' ? 'open' : ''}>
+        <summary><span class="dot ${c.status}" aria-label="${c.status}">${SYMBOL[c.status]}</span><span class="t">${esc(c.title)}</span><span class="chev">›</span></summary>
+        <div class="body"><p>${esc(c.detail)}</p>${c.fix ? `<p class="fixbox"><b>How to fix:</b> ${esc(c.fix)}</p>` : ''}</div>
+      </details>`).join('');
+  }).join('');
+  $('#detail').innerHTML = `
+    <div class="cats">${cats}</div>
+    <div class="filters" role="group" aria-label="Filter results">
+      ${[['issues', `Needs work (${sec.counts.fail + sec.counts.warn})`], ['pass', `Passed (${sec.counts.pass})`], ['all', 'All']].map(([k, l]) => `<button class="chip" data-f="${k}" aria-pressed="${f === k}">${l}</button>`).join('')}
+    </div>
+    ${groups || '<div class="card">Nothing to show for this filter.</div>'}`;
+  document.querySelectorAll('.chip').forEach((b) => b.onclick = () => { state.filter = b.dataset.f; renderDetail(); });
+}
+
+async function copyLink() {
+  const link = `${location.origin}/r/${state.report.id}`;
+  try {
+    if (navigator.share && matchMedia('(pointer:coarse)').matches) { await navigator.share({ title: `SEO & GEO report: ${state.report.host}`, url: link }); return; }
+    await navigator.clipboard.writeText(link); toast('Link copied');
+  } catch { prompt('Copy this link', link); }
+}
+
+/* ---------- Routing ---------- */
+async function route() {
+  const m = location.pathname.match(/^\/r\/([a-f0-9]{16})$/);
+  if (!m) return renderHome();
+  app.innerHTML = '<div class="loading"><div class="pulse"></div><h2>Loading report…</h2></div>';
+  const res = await fetch(`/api/reports/${m[1]}`);
+  if (!res.ok) { app.innerHTML = '<div class="card"><h2>Report not found</h2><p>The link may be wrong. <a href="/">Run a new scan</a>.</p></div>'; return; }
+  const r = await res.json();
+  state = { report: r, tab: r.seo ? 'seo' : 'geo', filter: 'issues' };
+  renderReport();
+}
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('a[data-nav], #home');
+  if (!a || e.metaKey || e.ctrlKey) return;
+  e.preventDefault(); history.pushState({}, '', a.getAttribute('href')); route();
+});
+addEventListener('popstate', route);
+route();
+</script>
+</body>
+</html>
