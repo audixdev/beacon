@@ -44,7 +44,7 @@ Scoring is weighted per check: pass = 1, warn = 0.5, fail = 0. These are heurist
 ## Quick start
 
 ```bash
-git clone https://github.com/<you>/beacon.git
+git clone https://github.com/audixdev/beacon.git
 cd beacon
 npm install
 npm start
